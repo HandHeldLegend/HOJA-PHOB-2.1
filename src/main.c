@@ -32,18 +32,21 @@ uint brake_slice_num = 0;
 void cb_hoja_hardware_setup()
 {
     // Set up GPIO for input buttons
-    hoja_setup_gpio_button(PGPIO_BUTTON_RS);
-    hoja_setup_gpio_button(PGPIO_BUTTON_LS);
+    hoja_setup_gpio_button(PGPIO_BTN_A);
+    hoja_setup_gpio_button(PGPIO_BTN_B);
+    hoja_setup_gpio_button(PGPIO_BTN_X);
+    hoja_setup_gpio_button(PGPIO_BTN_Y);
 
-    hoja_setup_gpio_push(PGPIO_PUSH_A);
-    hoja_setup_gpio_push(PGPIO_PUSH_B);
-    hoja_setup_gpio_push(PGPIO_PUSH_C);
-    hoja_setup_gpio_push(PGPIO_PUSH_D);
+    hoja_setup_gpio_button(PGPIO_BTN_START);
+    hoja_setup_gpio_button(PGPIO_BTN_L);
+    hoja_setup_gpio_button(PGPIO_BTN_R);
+    hoja_setup_gpio_button(PGPIO_BTN_ZL);
+    hoja_setup_gpio_button(PGPIO_BTN_ZR);
 
-    hoja_setup_gpio_scan(PGPIO_SCAN_A);
-    hoja_setup_gpio_scan(PGPIO_SCAN_B);
-    hoja_setup_gpio_scan(PGPIO_SCAN_C);
-    hoja_setup_gpio_scan(PGPIO_SCAN_D);
+    hoja_setup_gpio_button(PGPIO_BTN_DUP);
+    hoja_setup_gpio_button(PGPIO_BTN_DDOWN);
+    hoja_setup_gpio_button(PGPIO_BTN_DLEFT);
+    hoja_setup_gpio_button(PGPIO_BTN_DRIGHT);
 
     // Set up Rumble GPIO
     gpio_init(PGPIO_RUMBLE_MAIN);
@@ -89,68 +92,30 @@ void cb_hoja_hardware_setup()
     gpio_set_dir(PGPIO_RS_CS, GPIO_OUT);
     gpio_put(PGPIO_RS_CS, true); // active low
 
-    // IMU 0 initialize
-    gpio_init(PGPIO_IMU0_CS);
-    gpio_set_dir(PGPIO_IMU0_CS, GPIO_OUT);
-    gpio_put(PGPIO_IMU0_CS, true); // active low
-
-    // IMU 1 initialize
-    gpio_init(PGPIO_IMU1_CS);
-    gpio_set_dir(PGPIO_IMU1_CS, GPIO_OUT);
-    gpio_put(PGPIO_IMU1_CS, true); // active low
-
-    app_imu_init();
 }
 
 void cb_hoja_read_buttons(button_data_s *data)
 {
     // Keypad version
-    gpio_put(PGPIO_SCAN_A, false);
-    sleep_us(5);
-    data->button_a  = !gpio_get(PGPIO_PUSH_C);
-    data->button_b  = !gpio_get(PGPIO_PUSH_D);
-    data->button_x  = !gpio_get(PGPIO_PUSH_A);
-    data->button_y  = !gpio_get(PGPIO_PUSH_B);
-    gpio_put(PGPIO_SCAN_A, true);
+    data->button_a  = !gpio_get(PGPIO_BTN_A);
+    data->button_b  = !gpio_get(PGPIO_BTN_B);
+    data->button_x  = !gpio_get(PGPIO_BTN_X);
+    data->button_y  = !gpio_get(PGPIO_BTN_Y);
 
-    gpio_put(PGPIO_SCAN_B, false);
-    sleep_us(5);
-    data->dpad_left     = !gpio_get(PGPIO_PUSH_D);
-    data->dpad_right    = !gpio_get(PGPIO_PUSH_C);
-    data->dpad_down     = !gpio_get(PGPIO_PUSH_B);
-    data->dpad_up       = !gpio_get(PGPIO_PUSH_A);
-    gpio_put(PGPIO_SCAN_B, true);
+    data->dpad_left     = !gpio_get(PGPIO_BTN_DLEFT);
+    data->dpad_right    = !gpio_get(PGPIO_BTN_DRIGHT);
+    data->dpad_down     = !gpio_get(PGPIO_BTN_DDOWN);
+    data->dpad_up       = !gpio_get(PGPIO_BTN_DUP);
 
-    gpio_put(PGPIO_SCAN_C, false);
-    sleep_us(5);
-    data->button_plus       = !gpio_get(PGPIO_PUSH_A);
-    data->button_home       = !gpio_get(PGPIO_PUSH_B);
-    data->button_capture    = !gpio_get(PGPIO_PUSH_D);
-    data->button_minus      = !gpio_get(PGPIO_PUSH_C);
-    gpio_put(PGPIO_SCAN_C, true);
+    data->button_plus       = !gpio_get(PGPIO_BTN_START);
 
-    /*
-    if (data->button_capture)
-    {
-        reset_usb_boot(0, 0);
-    }
-    if (data->button_home)
-    {
-        watchdog_reboot(0, 0, 0);
-    }*/
+    data->trigger_r     = !gpio_get(PGPIO_BTN_ZR);
+    data->trigger_l     = !gpio_get(PGPIO_BTN_ZL);
+    data->trigger_zl    = !gpio_get(PGPIO_BTN_L);
+    data->trigger_zr    = !gpio_get(PGPIO_BTN_R);
 
-    gpio_put(PGPIO_SCAN_D, false);
-    sleep_us(5);
-    data->trigger_r     = !gpio_get(PGPIO_PUSH_B);
-    data->trigger_l     = !gpio_get(PGPIO_PUSH_D);
-    data->trigger_zl    = !gpio_get(PGPIO_PUSH_A);
-    data->trigger_zr    = !gpio_get(PGPIO_PUSH_C);
-    gpio_put(PGPIO_SCAN_D, true);
 
-    data->button_stick_right = !gpio_get(PGPIO_BUTTON_RS);
-    data->button_stick_left = !gpio_get(PGPIO_BUTTON_LS);
-
-    data->button_safemode = !gpio_get(PGPIO_BUTTON_MODE);
+    //data->button_safemode = !gpio_get(PGPIO_BUTTON_MODE);
 }
 
 void cb_hoja_read_analog(a_data_s *data)
@@ -190,7 +155,7 @@ void cb_hoja_read_analog(a_data_s *data)
 
     // Convert data
     data->lx = BUFFER_TO_UINT16(buffer_lx);
-    data->ly = BUFFER_TO_UINT16(buffer_ly);
+    data->ly = 4095 - BUFFER_TO_UINT16(buffer_ly);
     data->rx = BUFFER_TO_UINT16(buffer_rx);
     data->ry = BUFFER_TO_UINT16(buffer_ry);
 }
@@ -207,9 +172,9 @@ int main()
 
     printf("ProGCC Started.\n");
 
-    hoja_setup_gpio_button(PGPIO_BUTTON_MODE);
+    hoja_setup_gpio_button(PGPIO_BTN_START);
     // Handle bootloader stuff
-    if (!gpio_get(PGPIO_BUTTON_MODE))
+    if (!gpio_get(PGPIO_BTN_START))
     {
         reset_usb_boot(0, 0);
     }

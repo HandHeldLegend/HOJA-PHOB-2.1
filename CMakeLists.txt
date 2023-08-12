@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 include($ENV{PICO_SDK_PATH}/pico_sdk_init.cmake)
 
-project(PROGCC_RP2040 C CXX ASM)
+project(HOJA-PHOB C CXX ASM)
 
 pico_sdk_init()
 

@@ -7,6 +7,8 @@ bool ramp_up = false;
 bool ramp_down = false;
 const uint32_t _rumble_interval = 8000;
 
+#define RUMBLE_MAX 145
+
 void app_rumble_task(uint32_t timestamp)
 {
     static int lvl = 0;
@@ -15,10 +17,10 @@ void app_rumble_task(uint32_t timestamp)
     {
         if (rumble_on)
         {
-            lvl += 10;
-            if (lvl >= 110)
+            lvl += 25;
+            if (lvl >= RUMBLE_MAX)
             {
-                lvl = 110;
+                lvl = RUMBLE_MAX;
             }
             pwm_set_gpio_level(PGPIO_RUMBLE_BRAKE, 0);
             pwm_set_gpio_level(PGPIO_RUMBLE_MAIN, lvl);
