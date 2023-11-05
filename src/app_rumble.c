@@ -12,8 +12,7 @@ int _rumble_floor = 0;
 int _rumble_min = 0;
 int _rumble_current = 0;
 
-#define RUMBLE_MAX 100
-static uint8_t _rumble_max = RUMBLE_MAX;
+static uint8_t _rumble_max = 0;
 
 static bool _declining = false;
 

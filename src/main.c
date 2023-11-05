@@ -73,8 +73,6 @@ void cb_hoja_hardware_setup()
     pwm_set_gpio_level(PGPIO_RUMBLE_BRAKE, 255);
     pwm_set_gpio_level(PGPIO_RUMBLE_MAIN, 0);
 
-    sleep_us(150); // Stabilize voltages
-
     // initialize SPI at 1 MHz
     // initialize SPI at 3 MHz just to test
     spi_init(spi0, 3000 * 1000);
@@ -92,7 +90,15 @@ void cb_hoja_hardware_setup()
     gpio_set_dir(PGPIO_RS_CS, GPIO_OUT);
     gpio_put(PGPIO_RS_CS, true); // active low
 
+    // Set up ADC Triggers
+	adc_init();
+	adc_gpio_init(PGPIO_LT);
+	adc_gpio_init(PGPIO_RT);
 }
+
+int lt_offset = 0;
+int rt_offset = 0;
+bool trigger_offset_obtained = false;
 
 void cb_hoja_read_buttons(button_data_s *data)
 {
@@ -107,14 +113,36 @@ void cb_hoja_read_buttons(button_data_s *data)
     data->dpad_down     = !gpio_get(PGPIO_BTN_DDOWN);
     data->dpad_up       = !gpio_get(PGPIO_BTN_DUP);
 
-    data->button_plus       = !gpio_get(PGPIO_BTN_START);
+    data->button_plus   = !gpio_get(PGPIO_BTN_START);
 
     data->trigger_r     = !gpio_get(PGPIO_BTN_ZR);
     data->trigger_l     = !gpio_get(PGPIO_BTN_ZL);
     data->trigger_zl    = !gpio_get(PGPIO_BTN_L);
     data->trigger_zr    = !gpio_get(PGPIO_BTN_R);
 
+    // Read Analog triggers
+    adc_select_input(PADC_LT);
+    int ltr = (int) adc_read();
+    adc_select_input(PADC_RT);
+    int rtr = (int) adc_read();
 
+    if(!trigger_offset_obtained)
+    {
+        lt_offset = ltr;
+        rt_offset = rtr;
+        trigger_offset_obtained = true;
+    }
+    else
+    {
+        ltr -= lt_offset;
+        rtr -= rt_offset;
+
+        ltr = (ltr<0) ? 0 : ltr;
+        rtr = (rtr<0) ? 0 : rtr;
+
+        data->zl_analog = ltr;
+        data->zr_analog = rtr;
+    }
     //data->button_safemode = !gpio_get(PGPIO_BUTTON_MODE);
 }
 
@@ -154,10 +182,10 @@ void cb_hoja_read_analog(a_data_s *data)
     gpio_put(PGPIO_RS_CS, true);
 
     // Convert data
-    data->lx = 4095 - BUFFER_TO_UINT16(buffer_lx);
+    data->lx = BUFFER_TO_UINT16(buffer_lx);
     data->ly = BUFFER_TO_UINT16(buffer_ly);
-    data->rx = 4095 - BUFFER_TO_UINT16(buffer_rx);
-    data->ry = 4095 - BUFFER_TO_UINT16(buffer_ry);
+    data->rx = BUFFER_TO_UINT16(buffer_rx);
+    data->ry = BUFFER_TO_UINT16(buffer_ry);
 }
 
 void cb_hoja_task_1_hook(uint32_t timestamp)
