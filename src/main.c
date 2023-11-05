@@ -154,10 +154,10 @@ void cb_hoja_read_analog(a_data_s *data)
     gpio_put(PGPIO_RS_CS, true);
 
     // Convert data
-    data->lx = BUFFER_TO_UINT16(buffer_lx);
-    data->ly = 4095 - BUFFER_TO_UINT16(buffer_ly);
-    data->rx = BUFFER_TO_UINT16(buffer_rx);
-    data->ry = BUFFER_TO_UINT16(buffer_ry);
+    data->lx = 4095 - BUFFER_TO_UINT16(buffer_lx);
+    data->ly = BUFFER_TO_UINT16(buffer_ly);
+    data->rx = 4095 - BUFFER_TO_UINT16(buffer_rx);
+    data->ry = 4095 - BUFFER_TO_UINT16(buffer_ry);
 }
 
 void cb_hoja_task_1_hook(uint32_t timestamp)
