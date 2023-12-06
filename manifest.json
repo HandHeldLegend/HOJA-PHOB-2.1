@@ -1,4 +1,4 @@
 {
-    "changelog": "11.5.2023r2<br>- Implement digital trigger thresholds for only digital triggers.<br>- Fix digital trigger auto switch.",
-    "fw_version": 2562
+    "changelog": "12.5.2023<br>- Implement new notch adjustment system",
+    "fw_version": 2563
 }
