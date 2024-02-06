@@ -2,8 +2,9 @@
 #define BOARD_CONFIG_H
 
 // Device stuff
-#define HOJA_DEVICE_ID  0xF001
-#define HOJA_FW_VERSION 0x0A03
+#define HOJA_DEVICE_ID  0xF001 // DO NOT CHANGE
+
+#define HOJA_FW_VERSION 0x0A04
 
 // GPIO definitions
 #define HOJA_SERIAL_PIN 28

@@ -23,7 +23,9 @@ static bool _declining = false;
 
 void app_rumble_task(uint32_t timestamp)
 {
-    if(interval_run(timestamp, _rumble_interval))
+    static interval_s interval = {0};
+
+    if(interval_run(timestamp, _rumble_interval, &interval))
     {
         if (_rumble_current < _rumble_cap)
         {
