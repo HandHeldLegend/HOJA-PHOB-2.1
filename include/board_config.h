@@ -4,7 +4,7 @@
 // Device stuff
 #define HOJA_DEVICE_ID  0xF001 // DO NOT CHANGE
 
-#define HOJA_FW_VERSION 0x0A05
+#define HOJA_FW_VERSION 0x0A06
 
 // GPIO definitions
 #define HOJA_SERIAL_PIN 28
