@@ -4,7 +4,7 @@
 // Device stuff
 #define HOJA_DEVICE_ID  0xF001 // DO NOT CHANGE
 
-#define HOJA_FW_VERSION 0x0A06
+#define HOJA_FW_VERSION 0x0A07
 
 // GPIO definitions
 #define HOJA_SERIAL_PIN 28
@@ -14,7 +14,7 @@
 // URL that will display to open a config tool
 #define HOJA_WEBUSB_URL     "handheldlegend.github.io/hoja_config"
 #define HOJA_MANUFACTURER   "Phob"
-#define HOJA_PRODUCT        "Phob 2.1"
+#define HOJA_PRODUCT        "Phob 2.x"
 
 #define HOJA_ANALOG_HAIRTRIGGER_L 50<<4
 #define HOJA_ANALOG_HAIRTRIGGER_R 50<<4
@@ -32,7 +32,8 @@
 #define HOJA_CAPABILITY_NINTENDO_SERIAL 1
 #define HOJA_CAPABILITY_NINTENDO_JOYBUS 1
 
-#define HOJA_CAPABILITY_RUMBLE 1
+#define HOJA_CAPABILITY_RUMBLE_ERM 1
+#define HOJA_CAPABILITY_RUMBLE_LRA 0
 
 #define HOJA_RGB_GROUP_RS       {-1}
 #define HOJA_RGB_GROUP_LS       {-1}
