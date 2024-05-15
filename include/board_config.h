@@ -4,7 +4,7 @@
 // Device stuff
 #define HOJA_DEVICE_ID  0xF001 // DO NOT CHANGE
 
-#define HOJA_FW_VERSION 0x0A08
+#define HOJA_FW_VERSION 0x0A09
 
 // GPIO definitions
 #define HOJA_SERIAL_PIN 28
@@ -46,6 +46,10 @@
 #define HOJA_RGB_GROUP_X        {-1}
 #define HOJA_RGB_GROUP_A        {-1}
 #define HOJA_RGB_GROUP_B        {-1}
-
+#define HOJA_RGB_GROUP_L        {-1}
+#define HOJA_RGB_GROUP_R        {-1}
+#define HOJA_RGB_GROUP_ZR       {-1}
+#define HOJA_RGB_GROUP_ZL       {-1}
+#define HOJA_RGB_GROUP_PLAYER   {-1}
 
 #endif
