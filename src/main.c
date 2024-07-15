@@ -98,23 +98,8 @@ void cb_hoja_read_buttons(button_data_s *data)
     adc_select_input(PADC_RT);
     int rtr = (int) adc_read();
 
-    if(!trigger_offset_obtained)
-    {
-        lt_offset = ltr;
-        rt_offset = rtr;
-        trigger_offset_obtained = true;
-    }
-    else
-    {
-        ltr -= lt_offset;
-        rtr -= rt_offset;
-
-        ltr = (ltr<0) ? 0 : ltr;
-        rtr = (rtr<0) ? 0 : rtr;
-
-        data->zl_analog = ltr;
-        data->zr_analog = rtr;
-    }
+    data->zl_analog = ltr;
+    data->zr_analog = rtr;
     //data->button_safemode = !gpio_get(PGPIO_BUTTON_MODE);
 }
 

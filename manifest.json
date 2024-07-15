@@ -1,4 +1,4 @@
 {
-    "changelog": "5.16.2024<br>-Update N64 Mode",
-    "fw_version": 2570
+    "changelog": "7.14.2024<br>-Implement trigger disable feature<br>- Better trigger auto-deadzone",
+    "fw_version": 2572
 }
